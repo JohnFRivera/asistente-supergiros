@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/img/icon.png" type="image/png">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <title>SuperASISTENTE</title>
+</head>
+
+<body>
+    <main class="container">
+        <video class="video" id="defaultVideo" loop autoplay muted>
+            <source src="/assets/vids/por-defecto.mp4" type="video/mp4">
+        </video>
+        <video class="video" id="video" class="hidden">
+            <source src="" type="video/mp4">
+        </video>
+        <div class="message hidden" id="message">
+            <p>Espera...</p>
+        </div>
+        <div class="balls hidden" id="balls"></div>
+    </main>
+    <div style="padding: 1rem;">
+        <input type="text" id="ipTxt" style="width: 100%;font-size: large;padding: 0.5rem;">
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
