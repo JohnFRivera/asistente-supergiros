@@ -5,13 +5,17 @@ class Video {
      * @param {string} selector Selector del elemendo video.
      */
     constructor(selector) {
-        this.element = document.querySelector(selector);
-        this.lotteryIndex = 0;
-        this.numberIndex = 0;
-        this.results = [];
-        this.randomIndex = 0;
-        this.randoms = [];
+        this.element = document.querySelector('#video');
+        this.message = document.querySelector('#message');
+        this.balls = document.querySelector('#balls');
+        this.intervalIds = [];
     }
+
+    /**
+     * Obtener la duración del video.
+     * @returns Flotante con la duración del video en segundos.
+     */
+    duration() { return this.element.duration }
 
     /**
      * Hacer visible el elemento de video.
@@ -28,63 +32,6 @@ class Video {
      * @param {string} path Ruta.
      */
     src(src) { this.element.setAttribute('src', '/assets/vids/' + src + '.mp4') }
-
-    /**
-     * Establece las rutas de las loterías disponibles.
-     * @returns Verdadero si aún hay loterías, y falso si ya no quedan más loterías.
-     */
-    srcLottery() {
-        if (this.results.length > 0) {
-            if (this.lotteryIndex < this.results.length) {
-                var lottery = encodeURI(this.results[this.lotteryIndex].name);
-                this.lotteryIndex++;
-                this.element.setAttribute('src', '/assets/vids/resultado/' + lottery + '.mp4');
-                return true;
-            } else {
-                this.lotteryIndex = 0;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Establecer ruta de video al elemento.
-     * @param {string} lottery Lotería seleccionada.
-     * @returns Verdadero si aún hay números, y falso si ya no quedan más números.
-     */
-    srcNumber(lottery) {
-        var lotteryNumbers = this.results.find((l) => l.name === lottery).number;
-        if (lotteryNumbers) {
-            if (this.numberIndex < lotteryNumbers.length) {
-                var number = lotteryNumbers[this.numberIndex];
-                this.numberIndex++;
-                this.element.setAttribute('src', '/assets/vids/numero/' + number + '.mp4');
-                return true;
-            } else {
-                this.numberIndex = 0;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Establecer ruta de video al elemento.
-     * @returns Verdadero si aún hay números, y falso si ya no quedan más números.
-     */
-    srcRandom() {
-        if (this.randoms.length > 0) {
-            var number = this.randoms[this.randomIndex];
-            this.randomIndex++;
-            if (this.randomIndex <= this.randoms.length) {
-                this.element.setAttribute('src', '/assets/vids/numero/' + number + '.mp4');
-                return true;
-            } else {
-                this.randomIndex = 0;
-                this.randoms = [];
-            }
-        }
-        return false;
-    }
 
     /**
      * Restablecer video por defecto desde el principio.
@@ -111,38 +58,6 @@ class Video {
      * la promesa se rechaza.
      */
     async play() { try { await this.element.play() } catch (error) { throw error } }
-
-    /**
-     * Obtiene la lista de resultados del API y las guarda en el atributo lotteries.
-     */
-    async fetchResults() {
-        try {
-            const response = await fetch('http://localhost:3000/api/resultado');
-            const data = await response.json();
-            if (!response.ok) throw new Error('Error en la consulta');
-            data.results.length > 0 && (this.results = data.results);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    /**
-     * Valida si una lotería existe.
-     * @param {string} lottery Lotería a consultar.
-     * @returns Verdadero si existe, falso sino.
-     */
-    existLottery(lottery) { return this.results.find((l) => l.name === lottery) ? true : false }
-
-    generateRandoms(transcript) {
-        const numbers = ['cero', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
-        let number = 2;
-        numbers.forEach((n, i) => {
-            transcript.toLowerCase().includes(n) && (number = i);
-        });
-        for (let i = 0; i < number; i++) {
-            this.randoms.push(Math.floor(Math.random() * 10));
-        }
-    }
 
     /**
      * El evento finalizado se activa cuando la reproducción o la transmisión se detiene
@@ -172,5 +87,88 @@ class Video {
      * @param {(e: Event) => {}} callback Función a ejecutar
      */
     onPlay(callback) { this.element.onplay = (e) => callback(e) }
+
+    /**
+     * Mostrar mensaje en el DOM
+     * @param {string} text Mensaje
+     */
+    showMessage(text) {
+        this.message.children.item(0).innerHTML = text;
+        this.message.classList.remove('hidden');
+    }
+
+    /**
+     * Ocultar mensaje del DOM
+     */
+    hiddenMessage() {
+        this.message.classList.add('hidden');
+    }
+
+    /**
+     * Mostrar las bolas de lotería en el DOM
+     * @param {string} text Mensaje
+     */
+    showBalls() {
+        this.balls.classList.remove('hidden');
+    }
+
+    /**
+     * Ocultar bolas de lotería del DOM
+     */
+    hiddenBalls() {
+        this.balls.classList.add('hidden');
+        this.intervalIds = [];
+    }
+
+    /**
+     * Establecer los resultados sin animación de números aleatorios.
+     * @param {*} number Resultado.
+     */
+    setResult(number) {
+        this.balls.innerHTML = '';
+        for (let i = 0; i < number.length; i++) {
+            this.balls.innerHTML += `<div class="ball"><p>${number[i]}</p></div>`;
+        }
+    }
+
+    /**
+     * Establecer la cantidad de bolas.
+     * @param {string} randoms Cantidad de números aleatorios.
+     */
+    setBalls(randoms) {
+        this.balls.innerHTML = '';
+        for (let i = 0; i < randoms.length; i++) {
+            var num = i + 1;
+            this.balls.innerHTML += `<div class="ball"><p id="ball-${num}"></p></div>`;
+            this.generateInterval('#ball-' + num);
+            this.generateTimeout(i, '#ball-' + num, randoms[i]);
+        }
+    }
+
+    /**
+     * Generar intervalos para cada bola.
+     * @param {string} selector Selector de la bola.
+     */
+    generateInterval(selector) {
+        let iteracion = 0;
+        const id = setInterval(() => {
+            document.querySelector(selector).innerText = iteracion;
+            iteracion < 9 ? iteracion++ : (iteracion = 0);
+        }, 40);
+        this.intervalIds.push(id);
+    }
+
+    /**
+     * Generar timeout que para los intervalos.
+     * @param {number} index Iteración.
+     * @param {string} selector Selector.
+     * @param {number} random Número aleatorio.
+     */
+    generateTimeout(index, selector, random) {
+        setTimeout(() => {
+            clearInterval(this.intervalIds[index]);
+            document.querySelector(selector).innerText = random;
+        }, ((index + 1) * 960));
+    }
 }
 export default Video;

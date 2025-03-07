@@ -4,8 +4,7 @@ const router = Router();
 
 router.get('/api/resultado', async (req, res) => {
     try {
-        let date = new Date().toISOString().split('T').shift().split('-').reverse().join('/');
-        let response = await fetch('https://portal.supergirosnortedelvalle.com/api/resultados?fecha=' + date);
+        let response = await fetch('https://portal.supergirosnortedelvalle.com/api/resultados');
         let data = await response.json();
         let results = [];
         if (!response.ok) {

@@ -32,12 +32,12 @@
   background-color: #3335a1;
   border-radius: 25rem;
   box-shadow: 0.3rem 0.3rem 1rem rgba(0, 0, 0, 0.5);
-  margin-bottom: 1.6rem;
-  padding: 0.5rem 1rem;
+  margin-bottom: 2.5rem;
+  padding: 1rem 2rem;
 }
 
 .message > p {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   font-weight: 600;
 }
 
@@ -52,13 +52,13 @@
   background-color: #3335a1;
   border-radius: 25rem;
   box-shadow: 0.3rem 0.3rem 1rem rgba(0, 0, 0, 0.5);
-  margin-bottom: 1.6rem;
+  margin-bottom: 3rem;
   padding: 0.5rem 1rem;
 }
 
 .ball {
-  width: 42px;
-  height: 42px;
+  width: 62px;
+  height: 62px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,5 +69,5 @@
 .ball > p {
   color: black;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 3rem;
 }

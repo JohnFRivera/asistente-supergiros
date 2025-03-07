@@ -32,21 +32,21 @@ class SpeechRecognition {
      * ha terminado de capturar audio para el reconocimiento de voz.
      * @param {() => {}} callback Función a ejecutar
      */
-    onAudioEnd(callback) { this.recognition.onaudioend = () => callback() }
+    onAudioEnd(callback) { this.recognition.onaudioend = (e) => callback(e) }
 
     /**
      * El evento de inicio de audio se activa cuando el agente de usuario comienza
      * a capturar audio para el reconocimiento de voz.
      * @param {() => {}} callback Función a ejecutar
      */
-    onAudioStart(callback) { this.recognition.onaudiostart = () => callback() }
+    onAudioStart(callback) { this.recognition.onaudiostart = (e) => callback(e) }
 
     /**
      * El evento de finalización se activa cuando el servicio de reconocimiento de voz
      * se desconecta.
      * @param {() => {}} callback Función a ejecutar
      */
-    onEnd(callback) { this.recognition.onend = () => callback() }
+    onEnd(callback) { this.recognition.onend = (e) => callback(e) }
 
     /**
      * El evento de error se activa cuando se produce un error de reconocimiento de voz.
@@ -61,7 +61,7 @@ class SpeechRecognition {
      * de confianza.
      * @param {() => {}} callback Función a ejecutar
      */
-    onNoMatch(callback) { this.recognition.onnomatch = () => callback() }
+    onNoMatch(callback) { this.recognition.onnomatch = (e) => callback(e) }
 
     /**
      * El evento de resultado se activa cuando el servicio de reconocimiento de voz
@@ -77,6 +77,6 @@ class SpeechRecognition {
      * gramáticas asociadas.
      * @param {() => {}} callback Función a ejecutar
      */
-    onStart(callback) { this.recognition.onstart = () => callback() }
+    onStart(callback) { this.recognition.onstart = (e) => callback(e) }
 }
 export default SpeechRecognition;
