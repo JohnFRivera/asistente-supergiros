@@ -22,6 +22,31 @@
   visibility: hidden;
 }
 
+@keyframes parpadeo {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  opacity: 0;
+}
+
+.shining {
+  animation: parpadeo 0.8s infinite;
+}
+
 .message {
   position: absolute;
   left: 50%;

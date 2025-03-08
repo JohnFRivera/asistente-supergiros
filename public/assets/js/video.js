@@ -2,10 +2,10 @@ class Video {
     /**
      * Constructor del elemendo de video, ten en cuenta que se debe crear un elemento
      * videoDefault también.
-     * @param {string} selector Selector del elemendo video.
      */
-    constructor(selector) {
+    constructor() {
         this.element = document.querySelector('#video');
+        this.shining = document.querySelector('#shining');
         this.message = document.querySelector('#message');
         this.balls = document.querySelector('#balls');
         this.intervalIds = [];
@@ -89,6 +89,16 @@ class Video {
     onPlay(callback) { this.element.onplay = (e) => callback(e) }
 
     /**
+     * Mostrar resplandor en el DOM
+     */
+    showShining() { this.shining.classList.add('shining') }
+
+    /**
+     * Ocultar resplandor del DOM
+     */
+    hiddenShining() { this.shining.classList.remove('shining') }
+
+    /**
      * Mostrar mensaje en el DOM
      * @param {string} text Mensaje
      */
@@ -100,17 +110,13 @@ class Video {
     /**
      * Ocultar mensaje del DOM
      */
-    hiddenMessage() {
-        this.message.classList.add('hidden');
-    }
+    hiddenMessage() { this.message.classList.add('hidden') }
 
     /**
      * Mostrar las bolas de lotería en el DOM
      * @param {string} text Mensaje
      */
-    showBalls() {
-        this.balls.classList.remove('hidden');
-    }
+    showBalls() { this.balls.classList.remove('hidden') }
 
     /**
      * Ocultar bolas de lotería del DOM
