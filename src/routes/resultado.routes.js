@@ -16,7 +16,7 @@ router.get('/api/resultado', async (req, res) => {
         if (data.resultados.length > 0) {
             results = data.resultados.map(l => {
                 return {
-                    name: l.lottery.display_name.toLowerCase().trim().split(' ').join('-'),
+                    name: l.lottery.display_name.toLowerCase().trim().split(' ').join('-').normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
                     number: l.number,
                 };
             });

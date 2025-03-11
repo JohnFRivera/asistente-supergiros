@@ -57,7 +57,7 @@ class Video {
      * Si no se inicia la reproducción por cualquier motivo, como problemas de permisos,
      * la promesa se rechaza.
      */
-    async play() { try { await this.element.play() } catch (error) { throw error } }
+    async play() { try { await this.element.play() } catch (error) { window.location.reload() } }
 
     /**
      * El evento finalizado se activa cuando la reproducción o la transmisión se detiene

@@ -14,12 +14,12 @@ const defaultVideo = document.querySelector('#defaultVideo');
  * Eventos.
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicia reconocimiento de voz.
-    recognition.start();
     setTimeout(() => {
         video.showShining();
         setTimeout(() => video.hiddenShining(), 2400);
     }, 30000);
+    // Inicia reconocimiento de voz.
+    recognition.start();
 });
 
 recognition.onEnd(() => {
@@ -28,17 +28,18 @@ recognition.onEnd(() => {
 });
 const handleResult = async (transcript) => {
     try {
+        console.log(transcript);
         if (transcript) {
-            console.log(transcript);
             // Establecer transcripción y obtener entidades.
-            video.showShining();
-            setTimeout(() => video.hiddenShining(), 2400);
             conversation.setTranscript(transcript);
             const simple = conversation.getSimple();
             const complex = conversation.getComplex();
             const option = conversation.getOption();
             // Valida si existe alguna entidad
             if (simple || complex || option) {
+                conversation.decision = '';
+                video.showShining();
+                setTimeout(() => video.hiddenShining(), 2400);
                 // Instanciar por defecto video de no entender.
                 let folder = 'inentendible';
                 let vid = conversation.random(2) + 1;
@@ -51,6 +52,11 @@ const handleResult = async (transcript) => {
                         var horary = hour < 12 ? 'dia' : hour < 18 ? 'tarde' : 'noche';
                         vid = conversation.random(5) + 1;
                         !conversation.random(3) && (vid = horary);
+                    }
+                    // Si es dato, que asigne el dato y vaya de uno en uno para así no perderse ningún dato.
+                    if (simple.key === 'dato') {
+                        vid = conversation.fact;
+                        conversation.fact === 5 ? (conversation.fact = 1) : conversation.fact++;
                     }
                     // Si es aleatorio, generar número aleatorio y establecer números en aviso en pantalla.
                     if (simple.key === 'aleatorio') {
@@ -68,9 +74,12 @@ const handleResult = async (transcript) => {
                         switch (conversation.memory.key) {
                             case 'juego':
                                 // Si es juego, validad si solicita la modalidad o planes de premios.
-                                if (complex.value !== 'juego') {
+                                if (complex.key === 'juego' && complex.value !== 'juego') {
                                     folder = 'juego';
-                                    vid = conversation.memory.value + (complex.value === 'como' || complex.value === 'modalidad' ? '-modalidad' : '-premio');
+                                    vid = conversation.memory.value;
+                                    if (complex.value === 'modalidad') { vid += '-modalidad' }
+                                    if (complex.value === 'plan' || complex.value === 'premio') { vid += '-premio' }
+                                    if (complex.value === 'precio' || complex.value === 'cuanto') { vid += '-valor' }
                                 }
                                 break;
                         }
@@ -81,6 +90,7 @@ const handleResult = async (transcript) => {
                         vid = 'resultado-no';
                         if (conversation.results.length > 0) {
                             conversation.decision = 'loterias';
+                            conversation.iteration = 0;
                             vid = 'resultado';
                         }
                     };
@@ -95,18 +105,22 @@ const handleResult = async (transcript) => {
                             case 'juego':
                                 // Si la transcripción pide la modalidad o premio también.
                                 if (complex.value !== 'juego') {
-                                    vid += (complex.value === 'modalidad' ? '-modalidad' : '-premio');
+                                    if (complex.value === 'modalidad') { vid += '-modalidad' }
+                                    if (complex.value === 'plan' || complex.value === 'premio') { vid += '-premio' }
+                                    if (complex.value === 'precio' || complex.value === 'cuanto') { vid += '-valor' }
                                 }
                                 break;
                         }
                     }
                     // Si se pide el resultado de una lotería en específico, hace fetch a los resultados y establece los resultados en aviso en pantalla.
-                    if (option.key === 'resultado' || complex.key === 'resultado') {
+                    var complexKey = complex && (complex.key === 'resultado');
+                    if (option.key === 'resultado' || complexKey) {
                         await conversation.getResults();
                         folder = 'informacion';
                         vid = 'loteria-no';
                         if (conversation.existLottery(option.value)) {
                             conversation.decision = 'resultado';
+                            conversation.iteration = 0;
                             video.setResult(conversation.getNumber(option.value));
                             vid = 'resultado-es';
                         }
@@ -121,7 +135,7 @@ const handleResult = async (transcript) => {
     } catch (error) {
         // Si ocurre un error lo muestra en la consola.
         console.error(error);
-        location.reload();
+        window.location.reload();
     }
 };
 recognition.onResult(handleResult);
@@ -133,33 +147,44 @@ video.onLoadedMetaData(() => {
 video.onPlay(() => {
     // Mostrar video y validar la decision para saber que mensaje mostrar.
     video.show();
-    conversation.decision === 'aleatorio' || conversation.decision === 'resultado' ? video.showBalls() : video.showMessage('Hablando');
+    if (conversation.decision === 'aleatorio' || conversation.decision === 'resultado') {
+        video.showBalls();
+        video.hiddenMessage();
+    } else {
+        video.showMessage('Hablando');
+        video.hiddenBalls();
+    }
 });
 video.onEnded(() => {
-    var ended = true;
-    // Valida la decision tomada en la conversación.
-    switch (conversation.decision) {
-        case 'aleatorio':
-            var random = conversation.nextRandom();
-            random && (video.src('numero/' + random), (ended = false), (defaultVideo.currentTime = 0.80));
-            break;
-        case 'loterias':
-            var lottery = conversation.nextLottery();
-            lottery && (video.src('loteria/' + lottery), (ended = false), (defaultVideo.currentTime = 1.50));
-            break;
-        case 'resultado':
-            var number = conversation.nextNumber(conversation.memory.value);
-            number && (video.src('numero/' + number), (ended = false), (defaultVideo.currentTime = 0.80));
-            break;
-    }
-    // Si no ha finalizado la reproducción de video.
-    if (!ended) {
-        video.load();
-        video.play();
-    } else {
-        defaultVideo.play();
-        video.hidden();
-        conversation.decision === 'aleatorio' || conversation.decision === 'resultado' ? video.hiddenBalls() : video.hiddenMessage();
-        conversation.decision = '';
+    try {
+        var ended = true;
+        // Valida la decision tomada en la conversación.
+        switch (conversation.decision) {
+            case 'aleatorio':
+                var random = conversation.nextRandom();
+                random && (video.src('numero/' + random), (ended = false), (defaultVideo.currentTime = 0.80));
+                break;
+            case 'loterias':
+                var lottery = conversation.nextLottery();
+                lottery && (video.src('loteria/' + lottery), (ended = false), (defaultVideo.currentTime = 1.50));
+                break;
+            case 'resultado':
+                var number = conversation.nextNumber(conversation.memory.value);
+                number && (video.src('numero/' + number), (ended = false), (defaultVideo.currentTime = 0.80));
+                break;
+        }
+        // Si no ha finalizado la reproducción de video.
+        if (!ended) {
+            video.load();
+            video.play();
+        } else {
+            defaultVideo.play();
+            video.hidden();
+            conversation.decision === 'aleatorio' || conversation.decision === 'resultado' ? video.hiddenBalls() : video.hiddenMessage();
+            conversation.decision = '';
+        }
+    } catch (error) {
+        console.error(error);
+        location.reload();
     }
 });

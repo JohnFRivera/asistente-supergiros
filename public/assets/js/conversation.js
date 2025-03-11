@@ -6,26 +6,29 @@ class Conversation {
         this.transcript = '';
         this.memory = null;
         this.decision = '';
+        this.fact = 1;
         this.simple = {
             saludo: ['hola', 'saludo', 'buenas', 'ey', 'dia', 'tarde', 'noche', 'ayuda'],
             estado: ['como esta', 'como va', 'encuentra'],
             nombre: ['te llama', 'se llama', 'quien eres', 'tu nombre'],
-            despedida: ['chao', 'adios', 'hasta luego'],
+            gratitud: ['gracias'],
+            despedida: ['chao', 'adios', 'hasta luego', 'hasta pronto'],
+            dato: ['dato'],
             aleatorio: ['que numero', 'aleatorio', 'random', 'cifra'],
         };
         this.complex = {
             servicio: ['servicio'],
+            juego: ['juego', 'modalidad', 'plan', 'premio', 'precio', 'cuanto'],
             apps: ['aps', 'aplicacion'],
-            juego: ['juego', 'modalidad', 'plan', 'premio'],
             resultado: ['resultado'],
             horario: ['horario'],
         };
         this.option = {
             servicio: ['giros', 'recaudos', 'paquetes', 'subsidio'],
-            apps: ['super giros movil', 'betplay'],
-            juego: ['raspa', 'chance', 'súper chance', 'doble chance', 'chance millonario', 'chance tradicional', 'loteria', 'paga mas', 'baloto', 'mi loto', 'color loto'],
-            resultado: ['tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'cauca', 'boyaca', 'antioqueñita festivo mañana', 'antioqueñita festivo tarde', 'antioqueñita mañana', 'antioqueñita tarde', 'astro luna', 'astro sol', 'bogota', 'boyaca', 'cafeterito día', 'cafeterito noche festivo', 'cafeterito noche', 'caribeña día', 'caribeña festiva día', 'caribeña festiva noche', 'caribeña noche', 'chontico día festivo', 'chontico noche jueves', 'chontico noche', 'chontico', 'chonto festivo', 'culona festivo día', 'culona festivo', 'culona noche', 'culona', 'dorado festivo', 'dorado mañana', 'dorado noche', 'dorado tarde', 'la fantastica día', 'la fantastica festivo', 'la fantastica noche', 'lotería extra de nariño', 'motilon día', 'motilon noche', 'paisita festivo noche', 'paisita 3 sabados', 'paisita día', 'paisita festivo día', 'pijao festivo', 'pijao', 'samán festivo', 'samán', 'sinuano día', 'sinuano festivo día', 'sinuano festivo noche', 'sinuano noche',],
-            horario: ['atencion', 'tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'paisita tres', 'cauca', 'boyaca', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'domingo'],
+            juego: ['raspa', 'chance', 'super chance', 'doble chance', 'chance millonario', 'chance tradicional', 'loteria', 'paga mas', 'baloto', 'mi loto', 'color loto'],
+            apps: ['movil', 'betplay'],
+            resultado: ['tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'cauca', 'boyaca', 'antioquenita festivo manana', 'antioquenita festivo tarde', 'antioquenita manana', 'antioquenita tarde', 'astro luna', 'astro sol', 'bogota', 'boyaca', 'cafeterito dia', 'cafeterito noche festivo', 'cafeterito noche', 'caribena dia', 'caribena festiva dia', 'caribena festiva noche', 'caribena noche', 'chontico dia festivo', 'chontico noche jueves', 'chontico noche', 'chontico', 'chonto festivo', 'culona festivo dia', 'culona festivo', 'culona noche', 'culona', 'dorado festivo', 'dorado manana', 'dorado noche', 'dorado tarde', 'la fantastica dia', 'la fantastica festivo', 'la fantastica noche', 'loteria extra de narino', 'motilon dia', 'motilon noche', 'paisita festivo noche', 'paisita 3 sabados', 'paisita dia', 'paisita festivo dia', 'pijao festivo', 'pijao', 'saman festivo', 'saman', 'sinuano dia', 'sinuano festivo dia', 'sinuano festivo noche', 'sinuano noche',],
+            horario: ['atencion', 'tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'paisita tres', 'cauca', 'boyaca', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
         };
         this.iteration = 0;
         this.results = [];
