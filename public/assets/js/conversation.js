@@ -8,18 +8,17 @@ class Conversation {
         this.decision = '';
         this.fact = 1;
         this.simple = {
-            saludo: ['hola', 'saludo', 'buenas', 'ey', 'dia', 'tarde', 'noche', 'ayuda'],
+            saludo: ['hola', 'saludo', 'buenas', 'ey', 'dia', 'tarde', 'noche', 'ayuda', 'angie'],
             estado: ['como esta', 'como va', 'encuentra'],
-            nombre: ['te llama', 'se llama', 'quien eres', 'tu nombre'],
             gratitud: ['gracias'],
             despedida: ['chao', 'adios', 'hasta luego', 'hasta pronto'],
-            dato: ['dato'],
-            aleatorio: ['que numero', 'aleatorio', 'random', 'cifra'],
+            dato: ['dato', 'super servicios del valle'],
+            aleatorio: ['numero', 'aleatorio', 'random', 'cifra'],
         };
         this.complex = {
             servicio: ['servicio'],
             juego: ['juego', 'modalidad', 'plan', 'premio', 'precio', 'cuanto'],
-            apps: ['aps', 'aplicacion'],
+            apps: ['apps', 'aplicacion'],
             resultado: ['resultado'],
             horario: ['horario'],
         };
@@ -27,8 +26,8 @@ class Conversation {
             servicio: ['giros', 'recaudos', 'paquetes', 'subsidio'],
             juego: ['raspa', 'chance', 'super chance', 'doble chance', 'chance millonario', 'chance tradicional', 'loteria', 'paga mas', 'baloto', 'mi loto', 'color loto'],
             apps: ['movil', 'betplay'],
-            resultado: ['tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'cauca', 'boyaca', 'antioquenita festivo manana', 'antioquenita festivo tarde', 'antioquenita manana', 'antioquenita tarde', 'astro luna', 'astro sol', 'bogota', 'boyaca', 'cafeterito dia', 'cafeterito noche festivo', 'cafeterito noche', 'caribena dia', 'caribena festiva dia', 'caribena festiva noche', 'caribena noche', 'chontico dia festivo', 'chontico noche jueves', 'chontico noche', 'chontico', 'chonto festivo', 'culona festivo dia', 'culona festivo', 'culona noche', 'culona', 'dorado festivo', 'dorado manana', 'dorado noche', 'dorado tarde', 'la fantastica dia', 'la fantastica festivo', 'la fantastica noche', 'loteria extra de narino', 'motilon dia', 'motilon noche', 'paisita festivo noche', 'paisita 3 sabados', 'paisita dia', 'paisita festivo dia', 'pijao festivo', 'pijao', 'saman festivo', 'saman', 'sinuano dia', 'sinuano festivo dia', 'sinuano festivo noche', 'sinuano noche',],
-            horario: ['atencion', 'tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'paisita tres', 'cauca', 'boyaca', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
+            resultado: ['tolima', 'cundinamarca', 'huila', 'cruz roja', 'meta', 'manizales', 'valle', 'chonto noche', 'bogota', 'quindio', 'santander', 'medellin', 'risaralda', 'extra de colombia', 'cauca', 'boyaca', 'antioquenita festivo manana', 'antioquenita festivo tarde', 'antioquenita manana', 'antioquenita tarde', 'astro luna', 'astro sol', 'bogota', 'boyaca', 'cafeterito dia', 'cafeterito noche festivo', 'cafeterito noche', 'caribena dia', 'caribena festiva dia', 'caribena festiva noche', 'caribena noche', 'chontico dia festivo', 'chontico noche jueves', 'chontico noche', 'chontico', 'chonto festivo', 'culona festivo dia', 'culona festivo', 'culona noche', 'culona', 'dorado festivo', 'dorado manana', 'dorado noche', 'dorado tarde', 'fantastica dia', 'fantastica festivo', 'fantastica noche', 'loteria extra de narino', 'motilon dia', 'motilon noche', 'paisita festivo noche', 'paisita 3 sabados', 'paisita dia', 'paisita noche', 'paisita festivo dia', 'pijao festivo', 'pijao', 'saman festivo', 'saman', 'sinuano dia', 'sinuano festivo dia', 'sinuano festivo noche', 'sinuano noche',],
+            horario: ['atencion', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'],
         };
         this.iteration = 0;
         this.results = [];
@@ -111,7 +110,7 @@ class Conversation {
      */
     async getResults() {
         try {
-            let response = await fetch('http://localhost:3000/api/resultado');
+            let response = await fetch('https://10.25.6.180:3000/api/resultado');
             if (!response.ok) throw new Error('Error en el fetch');
             let data = await response.json();
             this.results = data.results;

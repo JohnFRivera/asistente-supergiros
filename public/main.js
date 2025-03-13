@@ -28,8 +28,8 @@ recognition.onEnd(() => {
 });
 const handleResult = async (transcript) => {
     try {
-        console.log(transcript);
-        if (transcript) {
+        if (transcript.includes('angie')) {
+            console.log(transcript);
             // Establecer transcripción y obtener entidades.
             conversation.setTranscript(transcript);
             const simple = conversation.getSimple();
@@ -44,7 +44,7 @@ const handleResult = async (transcript) => {
                 let folder = 'inentendible';
                 let vid = conversation.random(2) + 1;
                 // Validar entidad simple.
-                if (simple) {
+                if (simple && !option) {
                     folder = simple.key;
                     // Si es saludo, validar si es de día, tarde o noche y elegir respuesta aleatoriamente.
                     if (simple.key === 'saludo') {
@@ -66,7 +66,8 @@ const handleResult = async (transcript) => {
                     }
                 }
                 // Validar entidad compleja.
-                if (complex) {
+                var validateDato = simple && simple.key === 'dato';
+                if (complex && !validateDato) {
                     folder = 'informacion';
                     vid = complex.key;
                     // Validar si ya ha sido escogido una opción anteriormente.
@@ -78,8 +79,8 @@ const handleResult = async (transcript) => {
                                     folder = 'juego';
                                     vid = conversation.memory.value;
                                     if (complex.value === 'modalidad') { vid += '-modalidad' }
-                                    if (complex.value === 'plan' || complex.value === 'premio') { vid += '-premio' }
-                                    if (complex.value === 'precio' || complex.value === 'cuanto') { vid += '-valor' }
+                                    conversation.memory.value !== 'chance' && (complex.value === 'plan' || complex.value === 'premio' && (vid += '-premio'));
+                                    conversation.memory.value !== 'raspa' && conversation.memory.value !== 'chance' && conversation.memory.value !== 'loteria' && (complex.value === 'precio' || complex.value === 'cuanto' && (vid += '-valor'));
                                 }
                                 break;
                         }
@@ -96,7 +97,9 @@ const handleResult = async (transcript) => {
                     };
                 }
                 // Validar entidad opción.
-                if (option) {
+                var validateDato = simple && simple.key === 'dato';
+                var validateComplex = complex && conversation.transcript.includes('super giros') || conversation.transcript.includes('super servicios del valle');
+                if (option && !validateDato && !validateComplex) {
                     folder = option.key;
                     vid = option.value;
                     conversation.setMemory(option); // Guardar opción en memoría.
